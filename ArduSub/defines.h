@@ -147,4 +147,3 @@ enum LoggingParameters {
 #define MAVLINK_SET_POS_TYPE_MASK_FORCE           (1<<9)
 #define MAVLINK_SET_POS_TYPE_MASK_YAW_IGNORE      (1<<10)
 #define MAVLINK_SET_POS_TYPE_MASK_YAW_RATE_IGNORE (1<<11)
-

@@ -74,6 +74,8 @@
 #include "GCS_Sub.h"
 #include "mode.h"
 #include "script_button.h"
+#include "modeMPC.h"
+
 
 #include <AP_OpticalFlow/AP_OpticalFlow.h>     // Optical Flow library
 
@@ -143,6 +145,7 @@ private:
     RC_Channel *channel_lateral;
 
     AP_LeakDetector leak_detector;
+    
 
     struct {
         bool enabled:1;
@@ -599,6 +602,8 @@ private:
     ModeSurface mode_surface;
     ModeMotordetect mode_motordetect;
     ModeSurftrak mode_surftrak;
+    ModeMPC mode_mpc;
+
 
     // Auto
     AutoSubMode auto_mode;   // controls which auto controller is run

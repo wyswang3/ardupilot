@@ -37,7 +37,6 @@ class Mode
 {
 
 public:
-
     // Auto Pilot Modes enumeration
     enum class Number : uint8_t {
         STABILIZE =     0,  // manual angle with manual depth/throttle
@@ -50,8 +49,10 @@ public:
         POSHOLD =      16,  // automatic position hold with manual override, with automatic throttle
         MANUAL =       19,  // Pass-through input with no stabilization
         MOTOR_DETECT = 20,  // Automatically detect motors orientation
-        SURFTRAK =     21   // Track distance above seafloor (hold range)
+        SURFTRAK =     21,  // Track distance above seafloor (hold range)
+        MPC =          22   // Model Predictive Control (MPC) Mode
     };
+
 
     // constructor
     Mode(void);
@@ -272,6 +273,29 @@ protected:
 
     const char *name() const override { return "ALT_HOLD"; }
     const char *name4() const override { return "ALTH"; }
+};
+
+class ModeMPC : public Mode
+{
+public:
+    // inherit constructor
+    using Mode::Mode;
+
+    // 定义 MPC 模式的核心功能
+    void run() override;
+
+    bool init(bool ignore_checks) override;
+    bool requires_GPS() const override { return false; }
+    bool has_manual_throttle() const override { return false; }
+    bool allows_arming(bool from_gcs) const override { return true; }
+    bool is_autopilot() const override { return true; }
+
+    const char *name() const override { return "MPC"; }
+    const char *name4() const override { return "MPC "; }
+
+protected:
+    void run_pre();  // 如果需要，可以增加前置运行的控制逻辑
+    void run_post(); // 如果需要，可以增加后置运行的控制逻辑
 };
 
 

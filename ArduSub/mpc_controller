@@ -1,0 +1,78 @@
+#include "mpc_controller.h"
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+
+// Constructor for initializing the MPC controller
+MPC_Controller::MPC_Controller() {
+    // Initialize state variables, desired state, control parameters, etc.
+    // Example: Set some default control gains, bounds, and initial values
+    current_state = {0.0, 0.0, 0.0, 0.0};
+    desired_state = {0.0, 0.0, 0.0, 0.0};
+    control_gains = {1.0, 1.0, 1.0, 1.0};
+    control_bounds = { -1.0, 1.0};
+}
+
+// Initialize the controller with system matrices, prediction horizon, and sampling time
+void MPC_Controller::init(int prediction_horizon, double sampling_time, const std::vector<std::vector<double>>& A, const std::vector<std::vector<double>>& B, const std::vector<std::vector<double>>& Q, const std::vector<std::vector<double>>& R) {
+    this->prediction_horizon = prediction_horizon;
+    this->sampling_time = sampling_time;
+    this->A = A;
+    this->B = B;
+    this->Q = Q;
+    this->R = R;
+    
+    std::cout << "Initializing MPC controller with provided system matrices..." << std::endl;
+}
+
+// Set the desired state for the MPC to track
+void MPC_Controller::set_desired_state(const std::vector<double>& state) {
+    if (state.size() == desired_state.size()) {
+        desired_state = state;
+    } else {
+        std::cerr << "Error: Desired state size mismatch" << std::endl;
+    }
+}
+
+// Update the current state of the vehicle
+void MPC_Controller::update_current_state(const std::vector<double>& state) {
+    if (state.size() == current_state.size()) {
+        current_state = state;
+    } else {
+        std::cerr << "Error: Current state size mismatch" << std::endl;
+    }
+}
+
+// Calculate control outputs based on the desired state and current state
+void MPC_Controller::calculate_control(double& roll_output, double& pitch_output, double& yaw_output, double& throttle_output) {
+    // Implement the control law to determine control outputs
+    // This is a simplified version for demonstration purposes
+    roll_output = control_gains[0] * (desired_state[0] - current_state[0]);
+    pitch_output = control_gains[1] * (desired_state[1] - current_state[1]);
+    yaw_output = control_gains[2] * (desired_state[2] - current_state[2]);
+    throttle_output = control_gains[3] * (desired_state[3] - current_state[3]);
+
+    // Apply control bounds
+    roll_output = std::max(control_bounds[0], std::min(roll_output, control_bounds[1]));
+    pitch_output = std::max(control_bounds[0], std::min(pitch_output, control_bounds[1]));
+    yaw_output = std::max(control_bounds[0], std::min(yaw_output, control_bounds[1]));
+    throttle_output = std::max(control_bounds[0], std::min(throttle_output, control_bounds[1]));
+}
+
+// Set control gains for the MPC controller
+void MPC_Controller::set_control_gains(const std::vector<double>& gains) {
+    if (gains.size() == control_gains.size()) {
+        control_gains = gains;
+    } else {
+        std::cerr << "Error: Control gains size mismatch" << std::endl;
+    }
+}
+
+// Set control bounds for the outputs (min and max values)
+void MPC_Controller::set_control_bounds(const std::vector<double>& bounds) {
+    if (bounds.size() == 2) {
+        control_bounds = bounds;
+    } else {
+        std::cerr << "Error: Control bounds size mismatch" << std::endl;
+    }
+}
